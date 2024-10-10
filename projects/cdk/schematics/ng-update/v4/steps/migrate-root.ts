@@ -1,15 +1,17 @@
+import type {DevkitFileSystem} from 'ng-morph';
 import {
     addProviderToNgModule,
-    type DevkitFileSystem,
     getActiveProject,
     getNgModules,
     getPackageJsonDependency,
+    infoLog,
     Node,
+    REPLACE_SYMBOL,
+    SMALL_TAB_SYMBOL,
 } from 'ng-morph';
 
 import type {TuiSchema} from '../../../ng-add/schema';
 import {addUniqueImport} from '../../../utils/add-unique-import';
-import {infoLog, REPLACE_SYMBOL, SMALL_TAB_SYMBOL} from '../../../utils/colored-log';
 import {getNamedImportReferences} from '../../../utils/get-named-import-references';
 import {removeImport} from '../../../utils/import-manipulations';
 

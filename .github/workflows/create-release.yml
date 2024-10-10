@@ -20,12 +20,12 @@ jobs:
     env:
       IS_RRE_RELEASE_MODE: ${{ contains(github.event.inputs.mode, 'prerelease') }}
     steps:
-      - uses: actions/checkout@v4.2.0
+      - uses: actions/checkout@v4.2.1
         with:
           fetch-depth: 0
           token: ${{ secrets.TAIGA_FAMILY_BOT_PAT }}
-      - uses: taiga-family/ci/actions/setup/node@v1.87.0
-      - uses: taiga-family/ci/actions/setup/config/git@v1.87.0
+      - uses: taiga-family/ci/actions/setup/node@v1.93.2
+      - uses: taiga-family/ci/actions/setup/config/git@v1.93.2
         with:
           token: ${{ secrets.TAIGA_FAMILY_BOT_PAT }}
 
@@ -83,5 +83,5 @@ jobs:
         run: git push origin tag v${{ steps.run-release.outputs.new_version }} || echo ""
 
 concurrency:
-  group: create-release-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

@@ -1,6 +1,6 @@
 {
     "name": "@taiga-ui/cdk",
-    "version": "4.8.1",
+    "version": "4.10.0",
     "description": "Base library for creating Angular components and applications using Taiga UI principles regarding of actual visual appearance",
     "keywords": [
         "angular",
@@ -29,19 +29,19 @@
         "@angular/common": ">=16.0.0",
         "@angular/core": ">=16.0.0",
         "@angular/forms": ">=16.0.0",
-        "@ng-web-apis/common": "^4.6.4",
-        "@ng-web-apis/mutation-observer": "^4.6.4",
-        "@ng-web-apis/resize-observer": "^4.6.4",
-        "@taiga-ui/event-plugins": "^4.2.3",
-        "@taiga-ui/polymorpheus": "^4.7.3",
+        "@ng-web-apis/common": ">=4.8.0 <5",
+        "@ng-web-apis/mutation-observer": ">=4.8.0 <5",
+        "@ng-web-apis/resize-observer": ">=4.8.0 <5",
+        "@taiga-ui/event-plugins": ">=4.2.4 <5",
+        "@taiga-ui/polymorpheus": ">=4.7.4 <5",
         "rxjs": ">=7.0.0"
     },
     "optionalDependencies": {
         "@angular-devkit/core": ">=16.0.0",
         "@angular-devkit/schematics": ">=16.0.0",
         "@schematics/angular": ">=16.0.0",
-        "ng-morph": "^4.8.2",
-        "parse5": "^7.1.2"
+        "ng-morph": ">=4.8.4 <5",
+        "parse5": ">=7.1.2"
     },
     "ng-update": {
         "migrations": "./schematics/migration.json",

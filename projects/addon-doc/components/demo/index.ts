@@ -1,14 +1,17 @@
 import {JsonPipe, Location, NgIf, NgTemplateOutlet} from '@angular/common';
-import type {ElementRef, OnInit} from '@angular/core';
+import type {AfterViewInit, ElementRef} from '@angular/core';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     ContentChild,
     inject,
     Input,
+    signal,
     TemplateRef,
     ViewChild,
 } from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import type {AbstractControl} from '@angular/forms';
 import {FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import type {Params, UrlTree} from '@angular/router';
@@ -29,6 +32,7 @@ import {TuiSwitch} from '@taiga-ui/kit/components/switch';
 import {TuiChevron} from '@taiga-ui/kit/directives/chevron';
 import {TuiSelectModule} from '@taiga-ui/legacy/components/select';
 import {TuiTextfieldControllerModule} from '@taiga-ui/legacy/directives/textfield-controller';
+import {skip} from 'rxjs';
 
 const MIN_WIDTH = 160;
 
@@ -61,7 +65,7 @@ const MIN_WIDTH = 160;
         '(document:mouseup.silent)': 'onMouseUp()',
     },
 })
-export class TuiDocDemo implements OnInit {
+export class TuiDocDemo implements AfterViewInit {
     @ViewChild(TuiResizable, {static: true})
     private readonly resizable?: ElementRef<HTMLElement>;
 
@@ -75,13 +79,22 @@ export class TuiDocDemo implements OnInit {
     private readonly locationRef = inject(Location);
     private readonly urlSerializer = inject(UrlSerializer);
     private readonly urlStateHandler = inject(TUI_DOC_URL_STATE_HANDLER);
+    private readonly darkMode = inject(TUI_DARK_MODE);
 
     @ContentChild(TemplateRef)
     protected readonly template: TemplateRef<Record<string, unknown>> | null = null;
 
-    protected dark = tuiCoerceValueIsTrue(
-        this.params.darkMode ?? inject(TUI_DARK_MODE)(),
+    protected readonly rendered = signal(false);
+
+    protected theme = computed(() => (this.dark() ? 'dark' : 'light'));
+
+    protected dark = signal(
+        tuiCoerceValueIsTrue(this.params.darkMode ?? this.darkMode()),
     );
+
+    protected readonly $ = toObservable(this.darkMode)
+        .pipe(skip(1), takeUntilDestroyed())
+        .subscribe((mode) => this.onModeChange(mode));
 
     protected testForm?: FormGroup;
 
@@ -101,9 +114,10 @@ export class TuiDocDemo implements OnInit {
     @Input()
     public sticky = true;
 
-    public ngOnInit(): void {
+    public ngAfterViewInit(): void {
         this.createForm();
         this.updateWidth(this.sandboxWidth + this.delta);
+        this.rendered.set(true);
     }
 
     protected onResize(): void {
@@ -115,9 +129,9 @@ export class TuiDocDemo implements OnInit {
         this.updateUrl({sandboxWidth: this.sandboxWidth});
     }
 
-    protected onModeChange(dark: boolean): void {
-        this.dark = dark;
-        this.updateUrl({sandboxWidth: this.sandboxWidth, darkMode: this.dark});
+    protected onModeChange(darkMode: boolean): void {
+        this.dark.set(darkMode);
+        this.updateUrl({sandboxWidth: this.sandboxWidth, darkMode});
     }
 
     protected toggleDetails(): void {

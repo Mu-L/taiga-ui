@@ -1,7 +1,8 @@
 import {NgIf} from '@angular/common';
-import {type AfterContentChecked, ChangeDetectorRef, type QueryList} from '@angular/core';
+import type {AfterContentChecked, QueryList} from '@angular/core';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChildren,
     DestroyRef,
@@ -69,7 +70,6 @@ export class TuiDataListComponent<T>
     private readonly destroyRef = inject(DestroyRef);
     private readonly el = tuiInjectElement();
     private readonly cdr = inject(ChangeDetectorRef);
-
     protected readonly fallback = toSignal(inject(TUI_NOTHING_FOUND_MESSAGE));
     protected readonly empty = signal(false);
 
@@ -96,7 +96,7 @@ export class TuiDataListComponent<T>
         timer(0)
             .pipe(tuiZonefree(this.ngZone), tuiTakeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.empty.set(!this.el.querySelector('[tuiOption]'));
+                this.empty.set(!this.elements.length);
                 this.cdr.detectChanges();
             });
     }
@@ -115,8 +115,6 @@ export class TuiDataListComponent<T>
     }
 
     private get elements(): readonly HTMLElement[] {
-        return Array.from(
-            this.el.querySelectorAll('a[tuiOption],button[tuiOption],input'),
-        );
+        return Array.from(this.el.querySelectorAll('a,button,input'));
     }
 }

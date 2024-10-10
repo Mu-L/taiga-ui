@@ -1,9 +1,17 @@
-import {ChangeDetectionStrategy, type OnInit} from '@angular/core';
-import {Component, DestroyRef, EventEmitter, inject, Input, Output} from '@angular/core';
+import type {OnInit} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {provideAnimations} from '@angular/platform-browser/animations';
-import {TuiRoot} from '@taiga-ui/core';
+import {TUI_ANIMATIONS_SPEED, TuiIcon, TuiRoot} from '@taiga-ui/core';
 import type {TuiCountryIsoCode} from '@taiga-ui/i18n';
 import {
     TuiInputPhoneInternational,
@@ -13,19 +21,22 @@ import {createOutputSpy} from 'cypress/angular';
 
 @Component({
     standalone: true,
-    imports: [ReactiveFormsModule, TuiInputPhoneInternational, TuiRoot],
+    imports: [ReactiveFormsModule, TuiIcon, TuiInputPhoneInternational, TuiRoot],
     template: `
         <tui-root>
             <tui-input-phone-international
                 [countries]="countries"
                 [formControl]="control"
                 [(countryIsoCode)]="countryIsoCode"
-            ></tui-input-phone-international>
+            >
+                <tui-icon icon="@tui.sun" />
+            </tui-input-phone-international>
         </tui-root>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         provideAnimations(),
+        {provide: TUI_ANIMATIONS_SPEED, useValue: 0},
         tuiInputPhoneInternationalOptionsProvider({
             metadata: import('libphonenumber-js/min/metadata').then((m) => m.default),
         }),
@@ -239,6 +250,27 @@ describe('InputPhoneInternational', () => {
 
                 cy.get('@textfield').should('have.value', '+7 777 777-7777');
             });
+        });
+    });
+
+    describe('debug screenshot testing', () => {
+        beforeEach(() => {
+            cy.viewport(400, 300);
+
+            cy.mount(Test, {
+                componentProperties: {
+                    countryIsoCode: 'US',
+                },
+            });
+        });
+
+        it('entire page', () => {
+            cy.get('tui-input-phone-international').click('left');
+            cy.compareSnapshot('entire-page');
+        });
+
+        it('only textfield', () => {
+            cy.get('tui-input-phone-international').compareSnapshot('only-textfield');
         });
     });
 });

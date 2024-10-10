@@ -1,7 +1,8 @@
 import {resolve} from 'node:path';
 
+import {infoLog} from 'ng-morph';
+
 import {version} from '../package.json';
-import {infoLog} from '../projects/cdk/schematics/utils/colored-log';
 import {execute} from './shared/execute';
 import {IGNORABLE_TAIGA_PACKAGES} from './shared/ignorable-packages';
 import {overwriteVersion} from './shared/overwrite-version';
@@ -23,6 +24,6 @@ import {syncVersions} from './shared/sync-versions';
     overwriteVersion(resolve('./projects/cdk/constants/version.ts'), newVersion);
 
     execute(
-        `npx nx run-many --target publish --all --customTag=${type} --customVersion=${newVersion} --nxBail`,
+        `npx nx run-many -t publish --customTag=${type} --customVersion=${newVersion}`,
     );
 })();

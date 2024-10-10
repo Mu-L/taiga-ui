@@ -190,21 +190,6 @@ export const ROUTES: Routes = [
         title: 'Icon',
     }),
     route({
-        path: DemoRoute.IconsLucide,
-        loadComponent: async () => import('../icons/icons'),
-        title: 'Icons',
-    }),
-    route({
-        path: DemoRoute.IconsMaterial,
-        loadComponent: async () => import('../icons/material'),
-        title: 'Icons — Material',
-    }),
-    route({
-        path: DemoRoute.IconsFontawesome,
-        loadComponent: async () => import('../icons/font-awesome'),
-        title: 'Icons — FontAwesome',
-    }),
-    route({
         path: DemoRoute.Label,
         title: 'Label',
         loadComponent: async () => import('../components/label'),
@@ -969,6 +954,11 @@ export const ROUTES: Routes = [
         path: DemoRoute.Mapper,
         loadComponent: async () => import('../pipes/mapper'),
         title: 'Mapper',
+    }),
+    route({
+        path: DemoRoute.RepeatTimes,
+        loadComponent: async () => import('../pipes/repeat-times'),
+        title: 'RepeatTimes',
     }),
     route({
         path: DemoRoute.Stringify,

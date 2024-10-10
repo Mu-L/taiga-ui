@@ -1,20 +1,22 @@
 /// <reference lib="es2021" />
-import {type DevkitFileSystem, getPackageJsonDependency} from 'ng-morph';
-import {getSourceFiles, saveActiveProject} from 'ng-morph';
+import type {DevkitFileSystem} from 'ng-morph';
+import {
+    FINISH_SYMBOL,
+    getPackageJsonDependency,
+    getSourceFiles,
+    infoLog,
+    REPLACE_SYMBOL,
+    saveActiveProject,
+    SMALL_TAB_SYMBOL,
+    titleLog,
+} from 'ng-morph';
 
 import {ALL_TS_FILES} from '../../../constants/file-globs';
 import type {TuiSchema} from '../../../ng-add/schema';
-import {
-    FINISH_SYMBOL,
-    infoLog,
-    REPLACE_SYMBOL,
-    SMALL_TAB_SYMBOL,
-    titleLog,
-} from '../../../utils/colored-log';
 import {replaceIdentifiers} from '../../steps/replace-identifier';
 import {replacePackageName} from '../../steps/replace-package-name';
 
-export const TUI_EDITOR_VERSION = '^4.10.0';
+export const TUI_EDITOR_VERSION = '^4.11.0';
 
 export function migrateEditor(fileSystem: DevkitFileSystem, options: TuiSchema): void {
     const moduleSpecifier = ['@tinkoff/tui-editor', '@taiga-ui/addon-editor'];

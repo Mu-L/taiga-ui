@@ -16,8 +16,8 @@ jobs:
     if: ${{ !contains(github.event.workflow_run.head_branch, 'release/') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: taiga-family/ci/actions/setup/variables@v1.87.0
+      - uses: actions/checkout@v4.2.1
+      - uses: taiga-family/ci/actions/setup/variables@v1.93.2
 
       - name: Prepare demo before deploy from snapshots
         run: |
@@ -65,5 +65,5 @@ jobs:
           cname: taiga-ui.dev
 
 concurrency:
-  group: deploy-gh-pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

@@ -7,9 +7,9 @@ jobs:
     name: Firebase
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.0
-      - uses: taiga-family/ci/actions/setup/variables@v1.87.0
-      - uses: taiga-family/ci/actions/setup/node@v1.87.0
+      - uses: actions/checkout@v4.2.1
+      - uses: taiga-family/ci/actions/setup/variables@v1.93.2
+      - uses: taiga-family/ci/actions/setup/node@v1.93.2
       - run: npx nx build demo
       - name: Debug output
         run: tree dist/demo/browser -P '*.html'
@@ -23,5 +23,5 @@ jobs:
           expires: 1d
 
 concurrency:
-  group: firebase-${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

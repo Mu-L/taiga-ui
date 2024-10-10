@@ -1,5 +1,6 @@
 import {nxComponentTestingPreset} from '@nx/angular/plugins/component-testing';
 import {defineConfig} from 'cypress';
+import getCompareSnapshotsPlugin from 'cypress-image-diff-js/plugin';
 
 const preset = nxComponentTestingPreset(__filename);
 
@@ -44,5 +45,27 @@ export default defineConfig({
         indexHtmlFile: 'src/support/component-index.html',
         specPattern: 'src/tests/**/*.cy.ts',
         experimentalSingleTabRunMode: true,
+        setupNodeEvents(on, config) {
+            getCompareSnapshotsPlugin(on, config);
+
+            on('before:browser:launch', (browser, launchOptions) => {
+                if (browser.name === 'chrome') {
+                    launchOptions.args.push(
+                        '--font-render-hinting=none', // prevent inconsistent text rendering in headless mode
+                        '--force-device-scale-factor=2', // force screen to be retina
+                        '--high-dpi-support=1',
+                        '--force-prefers-reduced-motion',
+                        '--force-color-profile=srgb',
+                        '--disable-dev-shm-usage',
+                        '--disable-gpu',
+                        '--incognito',
+                    );
+                }
+
+                return launchOptions;
+            });
+
+            return config;
+        },
     },
 });

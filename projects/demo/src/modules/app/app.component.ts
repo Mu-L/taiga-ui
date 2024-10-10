@@ -1,9 +1,8 @@
 import type {OnInit} from '@angular/core';
 import {Component, DestroyRef, inject, ViewEncapsulation} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {NavigationEnd, Router} from '@angular/router';
 import {changeDetection} from '@demo/emulate/change-detection';
-import {environment} from '@demo/environments/environment';
 import {DemoRoute} from '@demo/routes';
 import {TuiDemo} from '@demo/utils';
 import {WA_LOCAL_STORAGE} from '@ng-web-apis/common';
@@ -60,13 +59,15 @@ export class App extends AbstractDemo implements OnInit {
     protected readonly router = inject(Router);
     protected readonly storage = inject(WA_LOCAL_STORAGE);
     protected readonly routes = DemoRoute;
-    protected readonly playground = environment.playground;
 
-    protected readonly isLanding$ = this.router.events.pipe(
-        filter((event) => event instanceof NavigationEnd),
-        map(() => this.url === '' || this.url === '/'),
-        distinctUntilChanged(),
-        startWith(true),
+    protected readonly isLanding = toSignal(
+        this.router.events.pipe(
+            filter((event) => event instanceof NavigationEnd),
+            map(() => this.url === '' || this.url === '/'),
+            distinctUntilChanged(),
+            startWith(true),
+        ),
+        {initialValue: true},
     );
 
     public override async ngOnInit(): Promise<void> {

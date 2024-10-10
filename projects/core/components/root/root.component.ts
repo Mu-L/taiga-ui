@@ -1,10 +1,11 @@
 /// <reference types="@taiga-ui/tsconfig/ng-dev-mode" />
-import {AsyncPipe, DOCUMENT, NgIf} from '@angular/common';
+import {DOCUMENT, NgIf} from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     inject,
+    signal,
     ViewEncapsulation,
 } from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
@@ -15,7 +16,10 @@ import {tuiWatch, tuiZonefreeScheduler} from '@taiga-ui/cdk/observables';
 import {TUI_IS_MOBILE} from '@taiga-ui/cdk/tokens';
 import {TuiAlerts} from '@taiga-ui/core/components/alert';
 import {TUI_DIALOGS, TuiDialogs} from '@taiga-ui/core/components/dialog';
-import {TuiScrollControls} from '@taiga-ui/core/components/scrollbar';
+import {
+    TUI_SCROLLBAR_OPTIONS,
+    TuiScrollControls,
+} from '@taiga-ui/core/components/scrollbar';
 import {TuiDropdowns} from '@taiga-ui/core/directives';
 import {TuiHints} from '@taiga-ui/core/directives/hint';
 import {TuiBreakpointService} from '@taiga-ui/core/services';
@@ -23,20 +27,12 @@ import {TUI_ANIMATIONS_SPEED, TUI_REDUCED_MOTION, TUI_THEME} from '@taiga-ui/cor
 import {tuiGetDuration} from '@taiga-ui/core/utils';
 import {PreventEventPlugin} from '@taiga-ui/event-plugins';
 import type {Observable} from 'rxjs';
-import {debounceTime, map, of} from 'rxjs';
+import {debounceTime, map} from 'rxjs';
 
 @Component({
     standalone: true,
     selector: 'tui-root',
-    imports: [
-        AsyncPipe,
-        NgIf,
-        TuiAlerts,
-        TuiDialogs,
-        TuiDropdowns,
-        TuiHints,
-        TuiScrollControls,
-    ],
+    imports: [NgIf, TuiAlerts, TuiDialogs, TuiDropdowns, TuiHints, TuiScrollControls],
     templateUrl: './root.template.html',
     styleUrls: ['./root.style.less'],
     encapsulation: ViewEncapsulation.None,
@@ -61,20 +57,33 @@ export class TuiRoot {
             map((breakpoint) => breakpoint === 'mobile'),
             tuiWatch(inject(ChangeDetectorRef)),
         ),
+        {initialValue: false},
     );
 
-    protected readonly scrollbars$: Observable<boolean> = inject(TUI_IS_MOBILE)
-        ? of(false)
-        : inject<Observable<readonly unknown[]>>(TUI_DIALOGS).pipe(
-              map(({length}) => !length),
-              debounceTime(0, tuiZonefreeScheduler()),
-          );
+    protected readonly nativeScrollbar = inject(TUI_SCROLLBAR_OPTIONS).mode === 'native';
+
+    protected readonly scrollbars =
+        this.nativeScrollbar || inject(TUI_IS_MOBILE)
+            ? signal(false)
+            : toSignal(
+                  inject<Observable<readonly unknown[]>>(TUI_DIALOGS).pipe(
+                      map(({length}) => !length),
+                      debounceTime(0, tuiZonefreeScheduler()),
+                  ),
+                  {initialValue: false},
+              );
 
     constructor() {
-        inject(DOCUMENT).defaultView?.document.documentElement.setAttribute(
+        inject(DOCUMENT).documentElement.setAttribute(
             'data-tui-theme',
             inject(TUI_THEME).toLowerCase(),
         );
+
+        if (!this.nativeScrollbar) {
+            inject(DOCUMENT).defaultView?.document.documentElement.classList.add(
+                'tui-zero-scrollbar',
+            );
+        }
 
         ngDevMode &&
             console.assert(

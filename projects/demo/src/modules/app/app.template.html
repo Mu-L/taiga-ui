@@ -1,4 +1,4 @@
-<router-outlet *ngIf="isLanding$ | async; else portal" />
+<router-outlet *ngIf="isLanding(); else portal" />
 <ng-template #portal>
     <tui-doc-main>
         <div
@@ -47,7 +47,7 @@
                             tuiOption
                             class="app-link-dropdown"
                         >
-                            Telegram chat
+                            Telegram
                         </a>
                         <a
                             href="https://discord.gg/zrB2EdJjEy"
@@ -57,7 +57,7 @@
                             tuiOption
                             class="app-link-dropdown"
                         >
-                            Angular Discord
+                            Discord
                         </a>
                         <a
                             iconStart="assets/icons/stackblitz.svg"
@@ -65,7 +65,7 @@
                             class="app-link-dropdown"
                             [routerLink]="routes.StackblitzStarter"
                         >
-                            StackBlitz Starter
+                            StackBlitz
                         </a>
                     </tui-data-list>
                 </ng-template>
@@ -107,12 +107,10 @@
             <a
                 appearance="icon"
                 iconStart="assets/icons/stackblitz.svg"
-                rel="noreferrer"
-                target="_blank"
                 title="Taiga UI StackBlitz Starter"
                 tuiLink
                 class="app-link"
-                [href]="playground"
+                [routerLink]="routes.StackblitzStarter"
             ></a>
         </div>
         <tui-sheets-host ngProjectAs="tuiOverContent" />

@@ -4,12 +4,13 @@ import {ChangeDetectorRef, DestroyRef, Directive, inject, Input} from '@angular/
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import type {AbstractControl, ControlValueAccessor} from '@angular/forms';
 import {NgControl, NgModel} from '@angular/forms';
-import {TuiValueTransformer} from '@taiga-ui/cdk/classes';
+import {TuiControl, TuiValueTransformer} from '@taiga-ui/cdk/classes';
 import {EMPTY_FUNCTION} from '@taiga-ui/cdk/constants';
 import {tuiIsPresent, tuiProvide} from '@taiga-ui/cdk/utils/miscellaneous';
 import {
     delay,
     distinctUntilChanged,
+    EMPTY,
     filter,
     map,
     merge,
@@ -138,7 +139,11 @@ export abstract class AbstractTuiControl<T>
                 filter(tuiIsPresent),
                 distinctUntilChanged(),
                 switchMap((control) =>
-                    merge(control.valueChanges, control.statusChanges),
+                    merge(
+                        control.valueChanges,
+                        control.statusChanges,
+                        (control as any).events || EMPTY,
+                    ),
                 ),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -250,6 +255,6 @@ export abstract class AbstractTuiControl<T>
     }
 }
 
-export function tuiAsControl<T>(control: Type<AbstractTuiControl<T>>): Provider {
-    return tuiProvide(AbstractTuiControl, control);
+export function tuiAsControl<T>(control: Type<AbstractTuiControl<T>>): Provider[] {
+    return [tuiProvide(AbstractTuiControl, control), tuiProvide(TuiControl, control)];
 }

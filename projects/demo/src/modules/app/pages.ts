@@ -105,26 +105,6 @@ export const pages: TuiDocRoutePages = [
         route: DemoRoute.Colors,
     },
     {
-        section: 'Icons',
-        title: 'Lucide',
-        keywords:
-            'icons, icon, free, pack, lucide, markup, icons, image, картинка, свг, svg, графика',
-        route: DemoRoute.IconsLucide,
-    },
-    {
-        section: 'Icons',
-        title: 'Material',
-        keywords: 'icons, material, design, картинка, свг, svg, графика',
-        route: DemoRoute.IconsMaterial,
-    },
-    {
-        section: 'Icons',
-        title: 'FontAwesome',
-        keywords:
-            'icons, fontawesome, awesome, font, design, картинка, свг, svg, графика',
-        route: DemoRoute.IconsFontawesome,
-    },
-    {
         section: 'Foundations',
         title: 'Styles',
         subPages: [
@@ -911,7 +891,7 @@ export const pages: TuiDocRoutePages = [
     {
         section: 'Navigation',
         title: 'Segmented',
-        keywords: 'tabs, control, radio, navigation, навигация, beaver, вкладки, таб',
+        keywords: 'tabs, control, radio, navigation, навигация, вкладки, таб',
         route: DemoRoute.Segmented,
     },
     {
@@ -954,7 +934,7 @@ export const pages: TuiDocRoutePages = [
     {
         section: 'Layout',
         title: 'Navigation',
-        keywords: 'шапка, header, sidebar, aside, сайдбар, навигация',
+        keywords: 'шапка, header, sidebar, aside, сайдбар, навигация, beaver',
         route: DemoRoute.Navigation,
     },
     {
@@ -1367,6 +1347,12 @@ export const pages: TuiDocRoutePages = [
                 title: 'Mapper',
                 keywords: 'mapper, мап, преобразование, пайп, pipe',
                 route: DemoRoute.Mapper,
+            },
+            {
+                section: 'Tools',
+                title: 'RepeatTimes',
+                keywords: 'повторение, repeat, пайп, pipe',
+                route: DemoRoute.RepeatTimes,
             },
             {
                 section: 'Tools',

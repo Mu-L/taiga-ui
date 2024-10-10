@@ -6,6 +6,7 @@ import type {UrlTree} from '@angular/router';
 import {provideRouter, withInMemoryScrolling} from '@angular/router';
 import {environment} from '@demo/environments/environment';
 import {WA_SESSION_STORAGE} from '@ng-web-apis/common';
+import type {TuiDocSourceCodePathOptions} from '@taiga-ui/addon-doc';
 import {
     TUI_DOC_CODE_EDITOR,
     TUI_DOC_DEFAULT_TABS,
@@ -20,7 +21,6 @@ import {
     TUI_DOC_TYPE_REFERENCE_HANDLER,
     TUI_DOC_URL_STATE_HANDLER,
     tuiDocExampleOptionsProvider,
-    type TuiDocSourceCodePathOptions,
     tuiSortPages,
 } from '@taiga-ui/addon-doc';
 import {TUI_IS_E2E, TUI_IS_PLAYWRIGHT, TUI_PLATFORM} from '@taiga-ui/cdk';
@@ -36,25 +36,13 @@ import type {TuiLanguageName} from '@taiga-ui/i18n';
 import {tuiLanguageSwitcher} from '@taiga-ui/i18n';
 import {HIGHLIGHT_OPTIONS} from 'ngx-highlightjs';
 
-import {SEE_ALSO_GROUPS} from './app.const';
+import {DEFAULT_LANGUAGE_PAGE, SEE_ALSO_GROUPS} from './app.const';
 import {ROUTES} from './app.routes';
 import {LOGO_CONTENT} from './logo/logo.component';
 import {metrikaOptionsProvider} from './metrika/metrika.service';
 import {pages} from './pages';
 import {TuiStackblitzService} from './stackblitz/stackblitz.service';
 import {exampleContentProcessor} from './utils';
-
-export const TUI_DEFAULT_LANGUAGE_PAGE = new Set([
-    'Calendar',
-    'CalendarMonth',
-    'CalendarRange',
-    'InputCardGroup',
-    'InputFiles',
-    'InputPhoneInternational',
-    'MobileCalendar',
-    'Table',
-    'TablePagination',
-]);
 
 export const config: ApplicationConfig = {
     providers: [
@@ -176,7 +164,7 @@ export const config: ApplicationConfig = {
         },
         {
             provide: TUI_DOC_SUPPORT_LANGUAGE,
-            useValue: TUI_DEFAULT_LANGUAGE_PAGE,
+            useValue: DEFAULT_LANGUAGE_PAGE,
         },
         {
             provide: TUI_DOC_URL_STATE_HANDLER,

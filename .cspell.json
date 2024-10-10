@@ -30,7 +30,9 @@
         "contentalign",
         "inputpassword",
         "inputcopy",
-        "docsearch"
+        "docsearch",
+        "Wachovia",
+        "urlset"
     ],
     "ignoreRegExpList": ["\\(https?://.*?\\)", "\\/{1}.+\\/{1}", "\\%2F.+", "\\%2C.+", "\\ɵ.+", "\\ыва.+"],
     "overrides": [

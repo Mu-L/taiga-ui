@@ -4,6 +4,10 @@
     display: block;
     border-radius: var(--tui-radius-m);
     text-align: start;
+
+    :host-context(*:disabled) {
+        pointer-events: none;
+    }
 }
 
 .t-icon {
@@ -12,7 +16,7 @@
     pointer-events: auto;
 
     &_small {
-        border: 0.25rem solid transparent;
+        border-width: 0.25rem;
     }
 }
 

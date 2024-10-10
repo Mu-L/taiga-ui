@@ -24,14 +24,14 @@ import {
     tuiRetargetedBoundaryCrossing,
 } from '@taiga-ui/cdk/utils/dom';
 import {tuiIsNativeFocusedIn} from '@taiga-ui/cdk/utils/focus';
-import {tuiArrayRemove} from '@taiga-ui/cdk/utils/miscellaneous';
+import {tuiArrayRemove, tuiIsString} from '@taiga-ui/cdk/utils/miscellaneous';
 import type {TuiDataListHost} from '@taiga-ui/core/components/data-list';
 import {
     tuiAsDataListHost,
     TuiDataListDirective,
 } from '@taiga-ui/core/components/data-list';
 import {TuiScrollbar} from '@taiga-ui/core/components/scrollbar';
-import {TuiDropdownOpen} from '@taiga-ui/core/directives/dropdown';
+import {TuiDropdownFixed, TuiDropdownOpen} from '@taiga-ui/core/directives/dropdown';
 import {TuiHintOptionsDirective} from '@taiga-ui/core/directives/hint';
 import {TUI_COMMON_ICONS} from '@taiga-ui/core/tokens';
 import type {TuiSizeL, TuiSizeS} from '@taiga-ui/core/types';
@@ -44,7 +44,6 @@ import {
 import type {TuiFocusableElementAccessor} from '@taiga-ui/legacy/tokens';
 import {tuiAsFocusableItemAccessor} from '@taiga-ui/legacy/tokens';
 import type {TuiStatus} from '@taiga-ui/legacy/utils';
-import {FIXED_DROPDOWN_CONTROLLER_PROVIDER} from '@taiga-ui/legacy/utils';
 import type {PolymorpheusContent} from '@taiga-ui/polymorpheus';
 import {PolymorpheusOutlet} from '@taiga-ui/polymorpheus';
 import {timer} from 'rxjs';
@@ -75,9 +74,8 @@ const TAG_VERTICAL_SPACE_REM = 0.125;
         tuiAsDataListHost(TuiInputTagComponent),
         TEXTFIELD_CONTROLLER_PROVIDER,
     ],
-    viewProviders: [FIXED_DROPDOWN_CONTROLLER_PROVIDER],
+    hostDirectives: [TuiDropdownFixed],
     host: {
-        ngSkipHydration: 'true',
         '[attr.data-size]': 'size',
         '[class._icon-start]': 'iconStart',
         '[class._expandable]': 'expandable',
@@ -416,9 +414,14 @@ export class TuiInputTagComponent
             .map((item) => this.clippedValue(item.trim()))
             .filter((item, index, {length}) => item.length > 0 && index !== length - 1);
         const validated = tags.filter((tag) => !this.disabledItemHandler(tag));
+        const invalid = tags.filter((tag) => this.disabledItemHandler(tag));
 
         if (array.length > 1) {
-            this.updateSearch(this.clippedValue(array[array.length - 1]?.trim() ?? ''));
+            const search = invalid.length
+                ? invalid.join(tuiIsString(this.separator) ? this.separator : ',')
+                : (array[array.length - 1]?.trim() ?? '');
+
+            this.updateSearch(this.clippedValue(search));
             this.value = this.filterValue([...this.value, ...validated]);
         } else {
             this.updateSearch(this.clippedValue(value));
